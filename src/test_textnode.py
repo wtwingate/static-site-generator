@@ -67,6 +67,30 @@ class TestSplitNodesDelimiter(unittest.TestCase):
             ],
         )
 
+    def test_code(self):
+        old_nodes = [
+            TextNode("Here is some `code` text", "text"),
+            TextNode("`print('hello, world')`", "text"),
+            TextNode("I'm a luddite!", "text"),
+        ]
+        self.assertEqual(
+            split_nodes_delimiter(old_nodes, "`", "code"),
+            [
+                TextNode("Here is some ", "text"),
+                TextNode("code", "code"),
+                TextNode(" text", "text"),
+                TextNode("print('hello, world')", "code"),
+                TextNode("I'm a luddite!", "text"),
+            ],
+        )
+
+    def test_bad_syntax(self):
+        old_nodes = [
+            TextNode("Here is some invalid **bold text", "text"),
+        ]
+        with self.assertRaises(Exception):
+            split_nodes_delimiter(old_nodes, "**", "bold")
+
 
 if __name__ == "__main__":
     unittest.main()
