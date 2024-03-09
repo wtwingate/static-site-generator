@@ -10,7 +10,7 @@ text_type_image = "image"
 
 
 class TextNode:
-    def __init__(self, text, text_type, url):
+    def __init__(self, text, text_type, url=None):
         self.text = text
         self.text_type = text_type
         self.url = url
@@ -24,6 +24,27 @@ class TextNode:
 
     def __repr__(self):
         return f"TextNode({self.text}, {self.text_type}, {self.url})"
+
+
+def split_nodes_delimiter(old_nodes, delimiter, text_type):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type != text_type_text:
+            new_nodes.append(node)
+            continue
+
+        split_text = node.text.split(delimiter)
+        if len(split_text) % 2 == 0:
+            raise Exception(f"Invalid Markdown syntax: unclosed {delimiter}")
+
+        for index, text in enumerate(split_text):
+            if len(text) == 0:
+                continue
+            if index % 2 == 0:
+                new_nodes.append(TextNode(text, text_type_text))
+            else:
+                new_nodes.append(TextNode(text, text_type))
+    return new_nodes
 
 
 def text_node_to_html(text_node):

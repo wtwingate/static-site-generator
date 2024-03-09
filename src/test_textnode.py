@@ -1,4 +1,5 @@
 from textnode import TextNode
+from textnode import split_nodes_delimiter
 import unittest
 
 
@@ -29,6 +30,42 @@ class TestTextNode(unittest.TestCase):
         node = TextNode("This is a text node", "bold", "https://www.boot.dev")
         node2 = TextNode("This is a text node", "bold", "https://www.boots_is_bae.dev")
         self.assertNotEqual(node, node2)
+
+
+class TestSplitNodesDelimiter(unittest.TestCase):
+    def test_bold(self):
+        old_nodes = [
+            TextNode("Here is some **bold** text", "text"),
+            TextNode("**SUCH BOLDNESS**", "text"),
+            TextNode("Not very bold at all", "text"),
+        ]
+        self.assertEqual(
+            split_nodes_delimiter(old_nodes, "**", "bold"),
+            [
+                TextNode("Here is some ", "text"),
+                TextNode("bold", "bold"),
+                TextNode(" text", "text"),
+                TextNode("SUCH BOLDNESS", "bold"),
+                TextNode("Not very bold at all", "text"),
+            ],
+        )
+
+    def test_italic(self):
+        old_nodes = [
+            TextNode("Here is some *italic* text", "text"),
+            TextNode("*Mama Mia! That's a spicy meat-a-ball!*", "text"),
+            TextNode("Nothing to see here", "text"),
+        ]
+        self.assertEqual(
+            split_nodes_delimiter(old_nodes, "*", "italic"),
+            [
+                TextNode("Here is some ", "text"),
+                TextNode("italic", "italic"),
+                TextNode(" text", "text"),
+                TextNode("Mama Mia! That's a spicy meat-a-ball!", "italic"),
+                TextNode("Nothing to see here", "text"),
+            ],
+        )
 
 
 if __name__ == "__main__":
