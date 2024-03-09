@@ -1,7 +1,7 @@
 # static-site-generator
 
-A static site generator built in Python as part of the Boot.dev curriculum
+A static site generator built in Python.
 
 ## Purpose
 
-The purpose of this project is to implement some of the core programming skills that I've been learning on Boot.dev and elsewhere.
+This is one of the guided projects included in the Boot.dev curriculum. The purpose is to practice some of the core programming concepts I've been learning. Since this is a guided project, the instructor provided a high-level overview of how to approach the project, but it was up to me to implement my own solutions to the various problems presented.
