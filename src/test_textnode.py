@@ -1,5 +1,4 @@
 from textnode import TextNode
-from textnode import split_nodes_delimiter
 import unittest
 
 

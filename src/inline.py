@@ -33,3 +33,23 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
             else:
                 new_nodes.append(TextNode(text, text_type))
     return new_nodes
+
+
+def split_nodes_image(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        if len(node.text) == 0:
+            continue
+        matches = extract_markdown_images(node.text)
+        if len(matches) == 0:
+            new_nodes.append(node)
+            continue
+        split_text = node.text.split(f"![{matches[0][0]}]({matches[0][1]})")
+        new_nodes.append(TextNode(split_text[0], "text"))
+        new_nodes.append(TextNode(matches[0][0], "image", matches[0][1]))
+        new_nodes.extend(split_nodes_image([TextNode(split_text[1], "text")]))
+    return new_nodes
+
+
+def split_nodes_link(old_nodes):
+    pass

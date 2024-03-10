@@ -1,4 +1,6 @@
 from inline import split_nodes_delimiter
+from inline import split_nodes_image
+from inline import split_nodes_link
 from inline import extract_markdown_images
 from inline import extract_markdown_links
 from textnode import TextNode
@@ -63,6 +65,41 @@ class TestSplitNodesDelimiter(unittest.TestCase):
         ]
         with self.assertRaises(Exception):
             split_nodes_delimiter(old_nodes, "**", "bold")
+
+
+class TestSplitNodesImage(unittest.TestCase):
+    def test_one_image(self):
+        old_nodes = [
+            TextNode(
+                "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) holy Moses!",
+                "text",
+            )
+        ]
+        self.assertEqual(
+            split_nodes_image(old_nodes),
+            [
+                TextNode("This is text with an ", "text"),
+                TextNode("image", "image", "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" holy Moses!", "text"),
+            ],
+        )
+
+    def test_two_images(self):
+        old_nodes = [
+            TextNode(
+                "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
+                "text",
+            )
+        ]
+        self.assertEqual(
+            split_nodes_image(old_nodes),
+            [
+                TextNode("This is text with an ", "text"),
+                TextNode("image", "image", "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and another ", "text"),
+                TextNode("second image", "image", "https://i.imgur.com/3elNhQu.png"),
+            ],
+        )
 
 
 class TestExtractMarkdown(unittest.TestCase):
