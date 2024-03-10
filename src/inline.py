@@ -60,4 +60,24 @@ def split_nodes_image(old_nodes):
 
 
 def split_nodes_link(old_nodes):
-    pass
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type != "text":
+            new_nodes.append(node)
+            continue
+        matches = extract_markdown_links(node.text)
+        if len(matches) == 0:
+            new_nodes.append(node)
+            continue
+        current_text = node.text
+        for match in matches:
+            split_text = current_text.split(f"[{match[0]}]({match[1]})", 1)
+            if len(split_text) != 2:
+                raise Exception("Invalid Markdown syntax")
+            if split_text[0] != "":
+                new_nodes.append(TextNode(split_text[0], "text"))
+            new_nodes.append(TextNode(match[0], "link", match[1]))
+            current_text = split_text[1]
+        if current_text != "":
+            new_nodes.append(TextNode(current_text, "text"))
+    return new_nodes

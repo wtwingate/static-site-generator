@@ -143,6 +143,81 @@ class TestSplitNodesImage(unittest.TestCase):
         )
 
 
+class TestSplitNodesLink(unittest.TestCase):
+    def test_one_link(self):
+        old_nodes = [
+            TextNode(
+                "This is text with an [link](https://www.example.com)",
+                "text",
+            )
+        ]
+        self.assertEqual(
+            split_nodes_link(old_nodes),
+            [
+                TextNode("This is text with an ", "text"),
+                TextNode("link", "link", "https://www.example.com"),
+            ],
+        )
+
+    def test_two_links(self):
+        old_nodes = [
+            TextNode(
+                "This is text with an [link](https://www.example.com) and another [second link](https://www.example.com)",
+                "text",
+            )
+        ]
+        self.assertEqual(
+            split_nodes_link(old_nodes),
+            [
+                TextNode("This is text with an ", "text"),
+                TextNode("link", "link", "https://www.example.com"),
+                TextNode(" and another ", "text"),
+                TextNode("second link", "link", "https://www.example.com"),
+            ],
+        )
+
+    def test_all_links(self):
+        old_nodes = [
+            TextNode(
+                "[duck](https://www.mallard.dev/duck)[duck](https://www.mallard.dev/duck)[goose](https://www.mallard.dev/goose)",
+                "text",
+            )
+        ]
+        self.assertEqual(
+            split_nodes_link(old_nodes),
+            [
+                TextNode("duck", "link", "https://www.mallard.dev/duck"),
+                TextNode("duck", "link", "https://www.mallard.dev/duck"),
+                TextNode("goose", "link", "https://www.mallard.dev/goose"),
+            ],
+        )
+
+    def test_no_images(self):
+        old_nodes = [
+            TextNode(
+                "This is just a plain old boring text with no images at all", "text"
+            ),
+            TextNode(
+                "What did the waiter say when he brought out the eggs benedict on a hubcap?",
+                "text",
+            ),
+            TextNode("There's no place like chrome for the hollandaise!", "text"),
+        ]
+        self.assertEqual(
+            split_nodes_link(old_nodes),
+            [
+                TextNode(
+                    "This is just a plain old boring text with no images at all", "text"
+                ),
+                TextNode(
+                    "What did the waiter say when he brought out the eggs benedict on a hubcap?",
+                    "text",
+                ),
+                TextNode("There's no place like chrome for the hollandaise!", "text"),
+            ],
+        )
+
+
 class TestExtractMarkdown(unittest.TestCase):
     def test_extract_images(self):
         text = "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and ![another](https://i.imgur.com/dfsdkjfd.png)"
