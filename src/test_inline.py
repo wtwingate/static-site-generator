@@ -101,6 +101,47 @@ class TestSplitNodesImage(unittest.TestCase):
             ],
         )
 
+    def test_all_images(self):
+        old_nodes = [
+            TextNode(
+                "![duck](https://www.mallard.dev/duck.png)![duck](https://www.mallard.dev/duck.png)![goose](https://www.mallard.dev/goose.png)",
+                "text",
+            )
+        ]
+        self.assertEqual(
+            split_nodes_image(old_nodes),
+            [
+                TextNode("duck", "image", "https://www.mallard.dev/duck.png"),
+                TextNode("duck", "image", "https://www.mallard.dev/duck.png"),
+                TextNode("goose", "image", "https://www.mallard.dev/goose.png"),
+            ],
+        )
+
+    def test_no_images(self):
+        old_nodes = [
+            TextNode(
+                "This is just a plain old boring text with no images at all", "text"
+            ),
+            TextNode(
+                "What did the waiter say when he brought out the eggs benedict on a hubcap?",
+                "text",
+            ),
+            TextNode("There's no place like chrome for the hollandaise!", "text"),
+        ]
+        self.assertEqual(
+            split_nodes_image(old_nodes),
+            [
+                TextNode(
+                    "This is just a plain old boring text with no images at all", "text"
+                ),
+                TextNode(
+                    "What did the waiter say when he brought out the eggs benedict on a hubcap?",
+                    "text",
+                ),
+                TextNode("There's no place like chrome for the hollandaise!", "text"),
+            ],
+        )
+
 
 class TestExtractMarkdown(unittest.TestCase):
     def test_extract_images(self):
