@@ -1,8 +1,5 @@
-from inline import split_nodes_delimiter, text_to_textnodes
-from inline import split_nodes_image
-from inline import split_nodes_link
-from inline import extract_markdown_images
-from inline import extract_markdown_links
+from inline import *
+from text_type import *
 from textnode import TextNode
 import unittest
 
@@ -10,61 +7,61 @@ import unittest
 class TestSplitNodesDelimiter(unittest.TestCase):
     def test_bold(self):
         old_nodes = [
-            TextNode("Here is some **bold** text", "text"),
-            TextNode("**SUCH BOLDNESS**", "text"),
-            TextNode("Not very bold at all", "text"),
+            TextNode("Here is some **bold** text", text_type_text),
+            TextNode("**SUCH BOLDNESS**", text_type_text),
+            TextNode("Not very bold at all", text_type_text),
         ]
         self.assertEqual(
-            split_nodes_delimiter(old_nodes, "**", "bold"),
+            split_nodes_delimiter(old_nodes, "**", text_type_bold),
             [
-                TextNode("Here is some ", "text"),
-                TextNode("bold", "bold"),
-                TextNode(" text", "text"),
-                TextNode("SUCH BOLDNESS", "bold"),
-                TextNode("Not very bold at all", "text"),
+                TextNode("Here is some ", text_type_text),
+                TextNode("bold", text_type_bold),
+                TextNode(" text", text_type_text),
+                TextNode("SUCH BOLDNESS", text_type_bold),
+                TextNode("Not very bold at all", text_type_text),
             ],
         )
 
     def test_italic(self):
         old_nodes = [
-            TextNode("Here is some *italic* text", "text"),
-            TextNode("*Mama Mia! That's a spicy meat-a-ball!*", "text"),
-            TextNode("Nothing to see here", "text"),
+            TextNode("Here is some *italic* text", text_type_text),
+            TextNode("*Mama Mia! That's a spicy meat-a-ball!*", text_type_text),
+            TextNode("Nothing to see here", text_type_text),
         ]
         self.assertEqual(
-            split_nodes_delimiter(old_nodes, "*", "italic"),
+            split_nodes_delimiter(old_nodes, "*", text_type_italic),
             [
-                TextNode("Here is some ", "text"),
-                TextNode("italic", "italic"),
-                TextNode(" text", "text"),
-                TextNode("Mama Mia! That's a spicy meat-a-ball!", "italic"),
-                TextNode("Nothing to see here", "text"),
+                TextNode("Here is some ", text_type_text),
+                TextNode("italic", text_type_italic),
+                TextNode(" text", text_type_text),
+                TextNode("Mama Mia! That's a spicy meat-a-ball!", text_type_italic),
+                TextNode("Nothing to see here", text_type_text),
             ],
         )
 
     def test_code(self):
         old_nodes = [
-            TextNode("Here is some `code` text", "text"),
-            TextNode("`print('hello, world')`", "text"),
-            TextNode("I'm a luddite!", "text"),
+            TextNode("Here is some `code` text", text_type_text),
+            TextNode("`print('hello, world')`", text_type_text),
+            TextNode("I'm a luddite!", text_type_text),
         ]
         self.assertEqual(
-            split_nodes_delimiter(old_nodes, "`", "code"),
+            split_nodes_delimiter(old_nodes, "`", text_type_code),
             [
-                TextNode("Here is some ", "text"),
-                TextNode("code", "code"),
-                TextNode(" text", "text"),
-                TextNode("print('hello, world')", "code"),
-                TextNode("I'm a luddite!", "text"),
+                TextNode("Here is some ", text_type_text),
+                TextNode("code", text_type_code),
+                TextNode(" text", text_type_text),
+                TextNode("print('hello, world')", text_type_code),
+                TextNode("I'm a luddite!", text_type_text),
             ],
         )
 
     def test_bad_syntax(self):
         old_nodes = [
-            TextNode("Here is some invalid **bold text", "text"),
+            TextNode("Here is some invalid **bold text", text_type_text),
         ]
         with self.assertRaises(Exception):
-            split_nodes_delimiter(old_nodes, "**", "bold")
+            split_nodes_delimiter(old_nodes, "**", text_type_bold)
 
 
 class TestSplitNodesImage(unittest.TestCase):
@@ -72,15 +69,15 @@ class TestSplitNodesImage(unittest.TestCase):
         old_nodes = [
             TextNode(
                 "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) holy Moses!",
-                "text",
+                text_type_text,
             )
         ]
         self.assertEqual(
             split_nodes_image(old_nodes),
             [
-                TextNode("This is text with an ", "text"),
-                TextNode("image", "image", "https://i.imgur.com/zjjcJKZ.png"),
-                TextNode(" holy Moses!", "text"),
+                TextNode("This is text with an ", text_type_text),
+                TextNode("image", text_type_image, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" holy Moses!", text_type_text),
             ],
         )
 
@@ -88,16 +85,18 @@ class TestSplitNodesImage(unittest.TestCase):
         old_nodes = [
             TextNode(
                 "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
-                "text",
+                text_type_text,
             )
         ]
         self.assertEqual(
             split_nodes_image(old_nodes),
             [
-                TextNode("This is text with an ", "text"),
-                TextNode("image", "image", "https://i.imgur.com/zjjcJKZ.png"),
-                TextNode(" and another ", "text"),
-                TextNode("second image", "image", "https://i.imgur.com/3elNhQu.png"),
+                TextNode("This is text with an ", text_type_text),
+                TextNode("image", text_type_image, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and another ", text_type_text),
+                TextNode(
+                    "second image", text_type_image, "https://i.imgur.com/3elNhQu.png"
+                ),
             ],
         )
 
@@ -105,40 +104,46 @@ class TestSplitNodesImage(unittest.TestCase):
         old_nodes = [
             TextNode(
                 "![duck](https://www.mallard.dev/duck.png)![duck](https://www.mallard.dev/duck.png)![goose](https://www.mallard.dev/goose.png)",
-                "text",
+                text_type_text,
             )
         ]
         self.assertEqual(
             split_nodes_image(old_nodes),
             [
-                TextNode("duck", "image", "https://www.mallard.dev/duck.png"),
-                TextNode("duck", "image", "https://www.mallard.dev/duck.png"),
-                TextNode("goose", "image", "https://www.mallard.dev/goose.png"),
+                TextNode("duck", text_type_image, "https://www.mallard.dev/duck.png"),
+                TextNode("duck", text_type_image, "https://www.mallard.dev/duck.png"),
+                TextNode("goose", text_type_image, "https://www.mallard.dev/goose.png"),
             ],
         )
 
     def test_no_images(self):
         old_nodes = [
             TextNode(
-                "This is just a plain old boring text with no images at all", "text"
+                "This is just a plain old boring text with no images at all",
+                text_type_text,
             ),
             TextNode(
                 "What did the waiter say when he brought out the eggs benedict on a hubcap?",
-                "text",
+                text_type_text,
             ),
-            TextNode("There's no place like chrome for the hollandaise!", "text"),
+            TextNode(
+                "There's no place like chrome for the hollandaise!", text_type_text
+            ),
         ]
         self.assertEqual(
             split_nodes_image(old_nodes),
             [
                 TextNode(
-                    "This is just a plain old boring text with no images at all", "text"
+                    "This is just a plain old boring text with no images at all",
+                    text_type_text,
                 ),
                 TextNode(
                     "What did the waiter say when he brought out the eggs benedict on a hubcap?",
-                    "text",
+                    text_type_text,
                 ),
-                TextNode("There's no place like chrome for the hollandaise!", "text"),
+                TextNode(
+                    "There's no place like chrome for the hollandaise!", text_type_text
+                ),
             ],
         )
 
@@ -148,14 +153,14 @@ class TestSplitNodesLink(unittest.TestCase):
         old_nodes = [
             TextNode(
                 "This is text with an [link](https://www.example.com)",
-                "text",
+                text_type_text,
             )
         ]
         self.assertEqual(
             split_nodes_link(old_nodes),
             [
-                TextNode("This is text with an ", "text"),
-                TextNode("link", "link", "https://www.example.com"),
+                TextNode("This is text with an ", text_type_text),
+                TextNode("link", text_type_link, "https://www.example.com"),
             ],
         )
 
@@ -163,16 +168,16 @@ class TestSplitNodesLink(unittest.TestCase):
         old_nodes = [
             TextNode(
                 "This is text with an [link](https://www.example.com) and another [second link](https://www.example.com)",
-                "text",
+                text_type_text,
             )
         ]
         self.assertEqual(
             split_nodes_link(old_nodes),
             [
-                TextNode("This is text with an ", "text"),
-                TextNode("link", "link", "https://www.example.com"),
-                TextNode(" and another ", "text"),
-                TextNode("second link", "link", "https://www.example.com"),
+                TextNode("This is text with an ", text_type_text),
+                TextNode("link", text_type_link, "https://www.example.com"),
+                TextNode(" and another ", text_type_text),
+                TextNode("second link", text_type_link, "https://www.example.com"),
             ],
         )
 
@@ -180,40 +185,46 @@ class TestSplitNodesLink(unittest.TestCase):
         old_nodes = [
             TextNode(
                 "[duck](https://www.mallard.dev/duck)[duck](https://www.mallard.dev/duck)[goose](https://www.mallard.dev/goose)",
-                "text",
+                text_type_text,
             )
         ]
         self.assertEqual(
             split_nodes_link(old_nodes),
             [
-                TextNode("duck", "link", "https://www.mallard.dev/duck"),
-                TextNode("duck", "link", "https://www.mallard.dev/duck"),
-                TextNode("goose", "link", "https://www.mallard.dev/goose"),
+                TextNode("duck", text_type_link, "https://www.mallard.dev/duck"),
+                TextNode("duck", text_type_link, "https://www.mallard.dev/duck"),
+                TextNode("goose", text_type_link, "https://www.mallard.dev/goose"),
             ],
         )
 
     def test_no_images(self):
         old_nodes = [
             TextNode(
-                "This is just a plain old boring text with no images at all", "text"
+                "This is just a plain old boring text with no images at all",
+                text_type_text,
             ),
             TextNode(
                 "What did the waiter say when he brought out the eggs benedict on a hubcap?",
-                "text",
+                text_type_text,
             ),
-            TextNode("There's no place like chrome for the hollandaise!", "text"),
+            TextNode(
+                "There's no place like chrome for the hollandaise!", text_type_text
+            ),
         ]
         self.assertEqual(
             split_nodes_link(old_nodes),
             [
                 TextNode(
-                    "This is just a plain old boring text with no images at all", "text"
+                    "This is just a plain old boring text with no images at all",
+                    text_type_text,
                 ),
                 TextNode(
                     "What did the waiter say when he brought out the eggs benedict on a hubcap?",
-                    "text",
+                    text_type_text,
                 ),
-                TextNode("There's no place like chrome for the hollandaise!", "text"),
+                TextNode(
+                    "There's no place like chrome for the hollandaise!", text_type_text
+                ),
             ],
         )
 
@@ -246,16 +257,16 @@ class TestTextToTextNodes(unittest.TestCase):
         self.assertEqual(
             text_to_textnodes(text),
             [
-                TextNode("This is ", "text"),
-                TextNode("text", "bold"),
-                TextNode(" with an ", "text"),
-                TextNode("italic", "italic"),
-                TextNode(" word and a ", "text"),
-                TextNode("code block", "code"),
-                TextNode(" and an ", "text"),
-                TextNode("image", "image", "https://i.imgur.com/zjjcJKZ.png"),
-                TextNode(" and a ", "text"),
-                TextNode("link", "link", "https://boot.dev"),
+                TextNode("This is ", text_type_text),
+                TextNode("text", text_type_bold),
+                TextNode(" with an ", text_type_text),
+                TextNode("italic", text_type_italic),
+                TextNode(" word and a ", text_type_text),
+                TextNode("code block", text_type_code),
+                TextNode(" and an ", text_type_text),
+                TextNode("image", text_type_image, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and a ", text_type_text),
+                TextNode("link", text_type_link, "https://boot.dev"),
             ],
         )
 
@@ -264,12 +275,12 @@ class TestTextToTextNodes(unittest.TestCase):
         self.assertEqual(
             text_to_textnodes(text),
             [
-                TextNode("This line is", "bold"),
-                TextNode(" ", "text"),
-                TextNode("only made up", "italic"),
-                TextNode(" ", "text"),
-                TextNode("of weird markdown", "bold"),
-                TextNode(" ", "text"),
-                TextNode("syntax", "code"),
+                TextNode("This line is", text_type_bold),
+                TextNode(" ", text_type_text),
+                TextNode("only made up", text_type_italic),
+                TextNode(" ", text_type_text),
+                TextNode("of weird markdown", text_type_bold),
+                TextNode(" ", text_type_text),
+                TextNode("syntax", text_type_code),
             ],
         )

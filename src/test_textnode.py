@@ -1,33 +1,36 @@
 from textnode import TextNode
+from text_type import *
 import unittest
 
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
-        node = TextNode("This is a text node", "bold", "https://www.boot.dev")
-        node2 = TextNode("This is a text node", "bold", "https://www.boot.dev")
+        node = TextNode("This is a text node", text_type_bold, "https://www.boot.dev")
+        node2 = TextNode("This is a text node", text_type_bold, "https://www.boot.dev")
         self.assertEqual(node, node2)
 
     def test_none(self):
-        node = TextNode("This is a text node", "bold", None)
-        node2 = TextNode("This is a text node", "bold", None)
+        node = TextNode("This is a text node", text_type_bold, None)
+        node2 = TextNode("This is a text node", text_type_bold, None)
         self.assertEqual(node, node2)
 
     def test_uneq1(self):
-        node = TextNode("This is a text node", "bold", "https://www.boot.dev")
+        node = TextNode("This is a text node", text_type_bold, "https://www.boot.dev")
         node2 = TextNode(
-            "This is a different text node", "bold", "https://www.boot.dev"
+            "This is a different text node", text_type_bold, "https://www.boot.dev"
         )
         self.assertNotEqual(node, node2)
 
     def test_uneq2(self):
-        node = TextNode("This is a text node", "italic", "https://www.boot.dev")
-        node2 = TextNode("This is a text node", "bold", "https://www.boot.dev")
+        node = TextNode("This is a text node", text_type_italic, "https://www.boot.dev")
+        node2 = TextNode("This is a text node", text_type_bold, "https://www.boot.dev")
         self.assertNotEqual(node, node2)
 
     def test_uneq3(self):
-        node = TextNode("This is a text node", "bold", "https://www.boot.dev")
-        node2 = TextNode("This is a text node", "bold", "https://www.boots_is_bae.dev")
+        node = TextNode("This is a text node", text_type_bold, "https://www.boot.dev")
+        node2 = TextNode(
+            "This is a text node", text_type_bold, "https://www.boots_is_bae.dev"
+        )
         self.assertNotEqual(node, node2)
 
 
