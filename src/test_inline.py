@@ -1,4 +1,4 @@
-from inline import split_nodes_delimiter
+from inline import split_nodes_delimiter, text_to_textnodes
 from inline import split_nodes_image
 from inline import split_nodes_link
 from inline import extract_markdown_images
@@ -236,5 +236,40 @@ class TestExtractMarkdown(unittest.TestCase):
             [
                 ("link", "https://www.example.com"),
                 ("another", "https://www.example.com/another"),
+            ],
+        )
+
+
+class TestTextToTextNodes(unittest.TestCase):
+    def test_markdown_to_text1(self):
+        text = "This is **text** with an *italic* word and a `code block` and an ![image](https://i.imgur.com/zjjcJKZ.png) and a [link](https://boot.dev)"
+        self.assertEqual(
+            text_to_textnodes(text),
+            [
+                TextNode("This is ", "text"),
+                TextNode("text", "bold"),
+                TextNode(" with an ", "text"),
+                TextNode("italic", "italic"),
+                TextNode(" word and a ", "text"),
+                TextNode("code block", "code"),
+                TextNode(" and an ", "text"),
+                TextNode("image", "image", "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and a ", "text"),
+                TextNode("link", "link", "https://boot.dev"),
+            ],
+        )
+
+    def test_markdown_to_text2(self):
+        text = "**This line is** *only made up* **of weird markdown** `syntax`"
+        self.assertEqual(
+            text_to_textnodes(text),
+            [
+                TextNode("This line is", "bold"),
+                TextNode(" ", "text"),
+                TextNode("only made up", "italic"),
+                TextNode(" ", "text"),
+                TextNode("of weird markdown", "bold"),
+                TextNode(" ", "text"),
+                TextNode("syntax", "code"),
             ],
         )
