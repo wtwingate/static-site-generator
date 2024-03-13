@@ -1,5 +1,6 @@
 import re
 from block_type import *
+from textnode import *
 
 
 def markdown_to_blocks(text):
@@ -33,3 +34,14 @@ def block_to_block_type(block):
     ):
         return block_type_ordered_list
     return block_type_paragraph
+
+
+def block_to_html_paragraph(block):
+    # convert raw markdown to text nodes
+    text_nodes = text_to_textnodes(block)
+    html_nodes = []
+    # convert text nodes to HTML nodes
+    for node in text_nodes:
+        html_nodes.append(text_node_to_html(node))
+    # create html parent node for block with inline children
+    return ParentNode("p", html_nodes)

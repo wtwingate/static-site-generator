@@ -1,4 +1,5 @@
-from htmlnode import LeafNode
+from htmlnode import *
+from inline import *
 from text_type import *
 
 
@@ -17,6 +18,18 @@ class TextNode:
 
     def __repr__(self):
         return f"TextNode({self.text}, {self.text_type}, {self.url})"
+
+
+def text_to_textnodes(text):
+    raw_text_node = TextNode(text, text_type_text)
+    text_nodes = []
+    text_nodes.append(raw_text_node)
+    text_nodes = split_nodes_delimiter(text_nodes, "**", text_type_bold)
+    text_nodes = split_nodes_delimiter(text_nodes, "*", text_type_italic)
+    text_nodes = split_nodes_delimiter(text_nodes, "`", text_type_code)
+    text_nodes = split_nodes_image(text_nodes)
+    text_nodes = split_nodes_link(text_nodes)
+    return text_nodes
 
 
 def text_node_to_html(text_node):
