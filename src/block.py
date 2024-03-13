@@ -15,17 +15,17 @@ def block_to_block_type(block):
     lines = block.split("\n")
     if re.match(r"^#{1,6}\s", block):
         return block_type_heading
-    if re.match(r"^(`{3}).*(`{3})$", block):
+    if block.startswith("```") and block.endswith("```"):
         return block_type_code
-    if all(line[0] == ">" for line in lines):
+    if all(line.startswith(">") for line in lines):
         return block_type_quote
-    if all(line[0] == "*" for line in lines):
+    if all(line.startswith("*") for line in lines):
         return block_type_unordered_list
-    if all(line[0] == "-" for line in lines):
+    if all(line.startswith("-") for line in lines):
         return block_type_unordered_list
     if (
         block.startswith("1.")
-        and all(re.match(r"^\d+\.", line) for line in lines)
+        and all(re.match(r"^\d+\.\s", line) for line in lines)
         # check if the list is numbered sequentially
         and all(
             int(lines[i][0]) == int(lines[i + 1][0]) - 1 for i in range(len(lines) - 1)
