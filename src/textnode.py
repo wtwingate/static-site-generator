@@ -1,4 +1,4 @@
-from leafnode import LeafNode
+from htmlnode import LeafNode
 from text_type import *
 
 
