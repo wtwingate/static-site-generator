@@ -107,12 +107,42 @@ def split_nodes_link(old_nodes):
     return new_nodes
 
 
-def block_to_html_paragraph(block):
-    # convert raw markdown to text nodes
+def block_to_html_heading(block):
     text_nodes = markdown_to_text_nodes(block)
     html_nodes = []
-    # convert text nodes to HTML nodes
     for node in text_nodes:
         html_nodes.append(text_node_to_html(node))
-    # create html parent node for block with inline children
+    heading_number = len(re.match(r"^#+"), block)
+    return ParentNode(f"h{heading_number}", html_nodes)
+
+
+def block_to_html_paragraph(block):
+    text_nodes = markdown_to_text_nodes(block)
+    html_nodes = []
+    for node in text_nodes:
+        html_nodes.append(text_node_to_html(node))
     return ParentNode("p", html_nodes)
+
+
+def block_to_html_code(block):
+    text_nodes = markdown_to_text_nodes(block)
+    html_nodes = []
+    for node in text_nodes:
+        html_nodes.append(text_node_to_html(node))
+    return ParentNode("code", html_nodes)
+
+
+def block_to_html_quote(block):
+    text_nodes = markdown_to_text_nodes(block)
+    html_nodes = []
+    for node in text_nodes:
+        html_nodes.append(text_node_to_html(node))
+    return ParentNode("quote", html_nodes)
+
+
+def block_to_html_unordered_list(block):
+    pass
+
+
+def block_to_html_ordered_list(block):
+    pass
