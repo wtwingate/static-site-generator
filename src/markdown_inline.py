@@ -1,6 +1,8 @@
-from textnode import TextNode
-from text_type import *
 import re
+from type_text import *
+from html_node import ParentNode
+from html_node import LeafNode
+from text_node import TextNode
 
 
 def extract_markdown_images(text):

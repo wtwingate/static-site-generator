@@ -1,6 +1,7 @@
-from htmlnode import *
-from inline import *
-from text_type import *
+from type_text import *
+from html_node import ParentNode
+from html_node import LeafNode
+from markdown_inline import *
 
 
 class TextNode:

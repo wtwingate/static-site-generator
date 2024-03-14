@@ -1,6 +1,6 @@
 import re
-from block_type import *
-from textnode import *
+from type_blocks import *
+from text_node import *
 
 
 def markdown_to_blocks(text):

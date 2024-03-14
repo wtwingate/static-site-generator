@@ -1,7 +1,5 @@
-from inline import *
-from text_type import *
-from textnode import TextNode
 import unittest
+from text_node import *
 
 
 class TestSplitNodesDelimiter(unittest.TestCase):

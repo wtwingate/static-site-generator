@@ -1,5 +1,5 @@
 import unittest
-from block import *
+from markdown_block import *
 
 
 class TestMarkdownToBlocks(unittest.TestCase):
@@ -132,6 +132,22 @@ class TestBlockToBlockType(unittest.TestCase):
     def test_ordered_list_out_of_order(self):
         block = "1. Ordered list incoming\n3. Second item\n4. Fourth item\n2. Wait a second..."
         self.assertEqual(block_to_block_type(block), block_type_paragraph)
+
+
+class TestBlockToHTMLParagraph(unittest.TestCase):
+    def test_simple_case(self):
+        block = "Here is a simple paragraph with some **bold** text in it."
+        self.assertEqual(
+            block_to_html_paragraph(block),
+            ParentNode(
+                "p",
+                [
+                    LeafNode(None, "Here is a simple paragraph with some "),
+                    LeafNode("b", "bold"),
+                    LeafNode(None, " text in it."),
+                ],
+            ),
+        )
 
 
 if __name__ == "__main__":
