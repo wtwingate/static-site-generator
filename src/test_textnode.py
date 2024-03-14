@@ -1,5 +1,7 @@
 import unittest
-from text_node import *
+from node_markdown import *
+from node_html import *
+from node_text import *
 
 
 class TestTextNode(unittest.TestCase):

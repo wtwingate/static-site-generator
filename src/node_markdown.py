@@ -1,8 +1,29 @@
 import re
 from type_text import *
-from html_node import ParentNode
-from html_node import LeafNode
-from text_node import TextNode
+from node_text import TextNode
+from node_text import text_node_to_html
+from node_html import ParentNode
+
+
+def markdown_to_blocks(text):
+    block_list = []
+    for line in text.split("\n\n"):
+        block_list.append(line.strip())
+    while "" in block_list:
+        block_list.remove("")
+    return block_list
+
+
+def markdown_to_text_nodes(text):
+    raw_text_node = TextNode(text, text_type_text)
+    text_nodes = []
+    text_nodes.append(raw_text_node)
+    text_nodes = split_nodes_delimiter(text_nodes, "**", text_type_bold)
+    text_nodes = split_nodes_delimiter(text_nodes, "*", text_type_italic)
+    text_nodes = split_nodes_delimiter(text_nodes, "`", text_type_code)
+    text_nodes = split_nodes_image(text_nodes)
+    text_nodes = split_nodes_link(text_nodes)
+    return text_nodes
 
 
 def extract_markdown_images(text):
@@ -84,3 +105,14 @@ def split_nodes_link(old_nodes):
         if current_text != "":
             new_nodes.append(TextNode(current_text, text_type_text))
     return new_nodes
+
+
+def block_to_html_paragraph(block):
+    # convert raw markdown to text nodes
+    text_nodes = markdown_to_text_nodes(block)
+    html_nodes = []
+    # convert text nodes to HTML nodes
+    for node in text_nodes:
+        html_nodes.append(text_node_to_html(node))
+    # create html parent node for block with inline children
+    return ParentNode("p", html_nodes)

@@ -1,5 +1,7 @@
 import unittest
-from markdown_block import *
+from node_markdown import *
+from node_html import *
+from node_text import *
 
 
 class TestMarkdownToBlocks(unittest.TestCase):
@@ -138,15 +140,15 @@ class TestBlockToHTMLParagraph(unittest.TestCase):
     def test_simple_case(self):
         block = "Here is a simple paragraph with some **bold** text in it."
         self.assertEqual(
-            block_to_html_paragraph(block),
-            ParentNode(
-                "p",
-                [
-                    LeafNode(None, "Here is a simple paragraph with some "),
-                    LeafNode("b", "bold"),
-                    LeafNode(None, " text in it."),
-                ],
-            ),
+            block_to_html_paragraph(block).to_html(),
+            "<p>Here is a simple paragraph with some <b>bold</b> text in it.</p>",
+        )
+
+    def test_complex_case(self):
+        block = "**Behold** a more *elusive* and `fascinating` example with a [link](https://www.mallard.dev)"
+        self.assertEqual(
+            block_to_html_paragraph(block).to_html(),
+            '<p><b>Behold</b> a more <i>elusive</i> and <code>fascinating</code> example with a <a href="https://www.mallard.dev">link</a></p>',
         )
 
 

@@ -1,4 +1,4 @@
-from text_node import TextNode
+from node_text import TextNode
 
 
 def main():

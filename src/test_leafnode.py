@@ -1,5 +1,7 @@
 import unittest
-from html_node import LeafNode
+from node_markdown import *
+from node_html import *
+from node_text import *
 
 
 class TestLeafNode(unittest.TestCase):

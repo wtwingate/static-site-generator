@@ -1,5 +1,7 @@
 import unittest
-from text_node import *
+from node_markdown import *
+from node_html import *
+from node_text import *
 
 
 class TestSplitNodesDelimiter(unittest.TestCase):
@@ -253,7 +255,7 @@ class TestTextToTextNodes(unittest.TestCase):
     def test_markdown_to_text1(self):
         text = "This is **text** with an *italic* word and a `code block` and an ![image](https://i.imgur.com/zjjcJKZ.png) and a [link](https://boot.dev)"
         self.assertEqual(
-            text_to_textnodes(text),
+            markdown_to_text_nodes(text),
             [
                 TextNode("This is ", text_type_text),
                 TextNode("text", text_type_bold),
@@ -271,7 +273,7 @@ class TestTextToTextNodes(unittest.TestCase):
     def test_markdown_to_text2(self):
         text = "**This line is** *only made up* **of weird markdown** `syntax`"
         self.assertEqual(
-            text_to_textnodes(text),
+            markdown_to_text_nodes(text),
             [
                 TextNode("This line is", text_type_bold),
                 TextNode(" ", text_type_text),
