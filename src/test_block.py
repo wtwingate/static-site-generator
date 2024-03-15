@@ -176,6 +176,15 @@ class TestBlockToHTMLCode(unittest.TestCase):
         )
 
 
+class TestBlockToHTMLQuote(unittest.TestCase):
+    def test_quote_block(self):
+        block = "> If we had some *beer*,\n> we could have **beer and pizza**,\n> if we had *pizza*."
+        self.assertEqual(
+            block_to_html_quote(block).to_html(),
+            "<blockquote>If we had some <i>beer</i>, we could have <b>beer and pizza</b>, if we had <i>pizza</i>.</blockquote>",
+        )
+
+
 class TestBlockToHTMLUnorderedList(unittest.TestCase):
     def test_unordered_list_asterisks(self):
         block = "* here is an unordered list\n* It's got some stuff\n* Bippity boppity"
@@ -219,6 +228,25 @@ class TestBlockToHTMLOrderedList(unittest.TestCase):
         self.assertEqual(
             block_to_html_ordered_list(block).to_html(),
             '<ol><li>here is a <b>bold</b> item</li><li>here is an <i>italic</i> one</li><li>here is a <a href="https://www.example.com">link</a></li><li>and here is some <code>code</code></li></ol>',
+        )
+
+
+class TestMarkdownToHTMLNode(unittest.TestCase):
+    def test_markdown_to_html(self):
+        markdown = """
+# Front-end Development is the Worst
+
+Look, front-end development is for script kiddies and soydevs who can't handle the real programming. I mean,
+it's just a bunch of divs and spans, right? And css??? It's like, "Oh, I want this to be red, but not thaaaaat
+red." What a joke.
+
+Real programmers *code*, not silly markup languages. They code on Arch Linux, not Mac OS, and certainly not
+Windows. They use **Vim**, not `VS Code`. They use C, not HTML. Come to the <a href="https://www.boot.dev">backend</a>,
+where the real programming happens.
+"""
+        self.assertEqual(
+            markdown_to_html_node(markdown).to_html(),
+            '<div><h1>Front-end Development is the Worst</h1><p>Look, front-end development is for script kiddies and soydevs who can\'t handle the real programming. I mean, it\'s just a bunch of divs and spans, right? And css??? It\'s like, "Oh, I want this to be red, but not thaaaaat red." What a joke.</p><p>Real programmers <i>code</i>, not silly markup languages. They code on Arch Linux, not Mac OS, and certainly not Windows. They use <b>Vim</b>, not <code>VS Code</code>. They use C, not HTML. Come to the <a href="https://www.boot.dev">backend</a>, where the real programming happens.</p></div>',
         )
 
 

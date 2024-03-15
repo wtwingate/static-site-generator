@@ -1,7 +1,9 @@
 import re
 from type_text import *
+from type_block import *
 from node_text import TextNode
 from node_text import text_node_to_html
+from node_text import block_to_block_type
 from node_html import ParentNode
 
 
@@ -105,6 +107,25 @@ def split_nodes_link(old_nodes):
     return new_nodes
 
 
+def markdown_to_html_node(markdown):
+    markdown_blocks = markdown_to_blocks(markdown)
+    html_nodes = []
+    for block in markdown_blocks:
+        if block_to_block_type(block) == block_type_heading:
+            html_nodes.append(block_to_html_heading(block))
+        elif block_to_block_type(block) == block_type_paragraph:
+            html_nodes.append(block_to_html_paragraph(block))
+        elif block_to_block_type(block) == block_type_code:
+            html_nodes.append(block_to_html_code(block))
+        elif block_to_block_type(block) == block_type_quote:
+            html_nodes.append(block_to_html_quote(block))
+        elif block_to_block_type(block) == block_type_unordered_list:
+            html_nodes.append(block_to_html_unordered_list(block))
+        elif block_to_block_type(block) == block_type_ordered_list:
+            html_nodes.append(block_to_html_ordered_list(block))
+    return ParentNode("div", html_nodes)
+
+
 def block_to_html_heading(block):
     heading = re.match(r"^#+\s", block).group()
     text_nodes = markdown_to_text_nodes(block.replace(heading, ""))
@@ -115,6 +136,7 @@ def block_to_html_heading(block):
 
 
 def block_to_html_paragraph(block):
+    block = re.sub(r"\n", " ", block)
     text_nodes = markdown_to_text_nodes(block)
     html_nodes = []
     for node in text_nodes:
@@ -131,6 +153,8 @@ def block_to_html_code(block):
 
 
 def block_to_html_quote(block):
+    block = re.sub(r"^>\s", "", block)
+    block = re.sub(r"\n>\s", " ", block)
     text_nodes = markdown_to_text_nodes(block)
     html_nodes = []
     for node in text_nodes:
