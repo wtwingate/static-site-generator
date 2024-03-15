@@ -192,11 +192,33 @@ class TestBlockToHTMLUnorderedList(unittest.TestCase):
         )
 
     def test_unordered_list_with_inline(self):
-        self.maxDiff = None
         block = "* here is a **bold** item\n* here is an *italic* one\n* here is a [link](https://www.example.com)\n* and here is some `code`"
         self.assertEqual(
             block_to_html_unordered_list(block).to_html(),
             '<ul><li>here is a <b>bold</b> item</li><li>here is an <i>italic</i> one</li><li>here is a <a href="https://www.example.com">link</a></li><li>and here is some <code>code</code></li></ul>',
+        )
+
+
+class TestBlockToHTMLOrderedList(unittest.TestCase):
+    def test_ordered_list_short(self):
+        block = "1. here is an ordered list\n2. It's got some stuff\n3. Bippity boppity"
+        self.assertEqual(
+            block_to_html_ordered_list(block).to_html(),
+            "<ol><li>here is an ordered list</li><li>It's got some stuff</li><li>Bippity boppity</li></ol>",
+        )
+
+    def test_ordered_list_long(self):
+        block = "1. this\n2. one\n3. goes\n4. to\n5. eleven\n6. lol\n7. nice\n8. Spinal\n9. Tap\n10. reference\n11. huh?"
+        self.assertEqual(
+            block_to_html_ordered_list(block).to_html(),
+            "<ol><li>this</li><li>one</li><li>goes</li><li>to</li><li>eleven</li><li>lol</li><li>nice</li><li>Spinal</li><li>Tap</li><li>reference</li><li>huh?</li></ol>",
+        )
+
+    def test_ordered_list_with_inline(self):
+        block = "1. here is a **bold** item\n2. here is an *italic* one\n3. here is a [link](https://www.example.com)\n4. and here is some `code`"
+        self.assertEqual(
+            block_to_html_ordered_list(block).to_html(),
+            '<ol><li>here is a <b>bold</b> item</li><li>here is an <i>italic</i> one</li><li>here is a <a href="https://www.example.com">link</a></li><li>and here is some <code>code</code></li></ol>',
         )
 
 

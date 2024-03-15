@@ -159,4 +159,15 @@ def block_to_html_unordered_list(block):
 
 
 def block_to_html_ordered_list(block):
-    pass
+    block = re.sub(r"^1\.\s", "", block)
+    list_items = re.split(r"\n\d+\.\s", block)
+    while "" in list_items:
+        list_items.remove("")
+    html_nodes = []
+    for item in list_items:
+        list_nodes = []
+        text_nodes = markdown_to_text_nodes(item)
+        for node in text_nodes:
+            list_nodes.append(text_node_to_html(node))
+        html_nodes.append(ParentNode("li", list_nodes))
+    return ParentNode("ol", html_nodes)
