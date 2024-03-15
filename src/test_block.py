@@ -150,6 +150,21 @@ class TestBlockToHTMLParagraph(unittest.TestCase):
             '<p><b>Behold</b> a more <i>elusive</i> and <code>fascinating</code> example with a <a href="https://www.mallard.dev">link</a></p>',
         )
 
+    def test_long_paragraph_new_lines(self):
+        block = """In the beginning God created the heaven and the earth.
+And the earth was without form, and void;
+and darkness was upon the face of the deep.
+And the Spirit of God moved upon the face of the waters.
+And God said, Let there be light: and there was light.
+And God saw the light, that it was good:
+and God divided the light from the darkness.
+And God called the light Day, and the darkness he called Night.
+And the evening and the morning were the first day."""
+        self.assertEqual(
+            block_to_html_paragraph(block).to_html(),
+            "<p>In the beginning God created the heaven and the earth. And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters. And God said, Let there be light: and there was light. And God saw the light, that it was good: and God divided the light from the darkness. And God called the light Day, and the darkness he called Night. And the evening and the morning were the first day.</p>",
+        )
+
 
 class TestBlockToHTMLHeading(unittest.TestCase):
     def test_heading_one(self):
