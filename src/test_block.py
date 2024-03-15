@@ -137,18 +137,66 @@ class TestBlockToBlockType(unittest.TestCase):
 
 
 class TestBlockToHTMLParagraph(unittest.TestCase):
-    def test_simple_case(self):
+    def test_simple_paragraph(self):
         block = "Here is a simple paragraph with some **bold** text in it."
         self.assertEqual(
             block_to_html_paragraph(block).to_html(),
             "<p>Here is a simple paragraph with some <b>bold</b> text in it.</p>",
         )
 
-    def test_complex_case(self):
+    def test_complex_paragraph(self):
         block = "**Behold** a more *elusive* and `fascinating` example with a [link](https://www.mallard.dev)"
         self.assertEqual(
             block_to_html_paragraph(block).to_html(),
             '<p><b>Behold</b> a more <i>elusive</i> and <code>fascinating</code> example with a <a href="https://www.mallard.dev">link</a></p>',
+        )
+
+
+class TestBlockToHTMLHeading(unittest.TestCase):
+    def test_heading_one(self):
+        block = "# I wanna be an HTML heading when I grow up!"
+        self.assertEqual(
+            block_to_html_heading(block).to_html(),
+            "<h1>I wanna be an HTML heading when I grow up!</h1>",
+        )
+
+    def test_heading_six(self):
+        block = "###### I'm just a little guy"
+        self.assertEqual(
+            block_to_html_heading(block).to_html(), "<h6>I'm just a little guy</h6>"
+        )
+
+
+class TestBlockToHTMLCode(unittest.TestCase):
+    def test_code_block(self):
+        block = "```\nfor i in range(10):\n    print('hello, world')\n```"
+        self.assertEqual(
+            block_to_html_code(block).to_html(),
+            "<pre><code>\nfor i in range(10):\n    print('hello, world')\n</code></pre>",
+        )
+
+
+class TestBlockToHTMLUnorderedList(unittest.TestCase):
+    def test_unordered_list_asterisks(self):
+        block = "* here is an unordered list\n* It's got some stuff\n* Bippity boppity"
+        self.assertEqual(
+            block_to_html_unordered_list(block).to_html(),
+            "<ul><li>here is an unordered list</li><li>It's got some stuff</li><li>Bippity boppity</li></ul>",
+        )
+
+    def test_unordered_list_dashes(self):
+        block = "- here is an unordered list\n- It's got some stuff\n- Bippity boppity"
+        self.assertEqual(
+            block_to_html_unordered_list(block).to_html(),
+            "<ul><li>here is an unordered list</li><li>It's got some stuff</li><li>Bippity boppity</li></ul>",
+        )
+
+    def test_unordered_list_with_inline(self):
+        self.maxDiff = None
+        block = "* here is a **bold** item\n* here is an *italic* one\n* here is a [link](https://www.example.com)\n* and here is some `code`"
+        self.assertEqual(
+            block_to_html_unordered_list(block).to_html(),
+            '<ul><li>here is a <b>bold</b> item</li><li>here is an <i>italic</i> one</li><li>here is a <a href="https://www.example.com">link</a></li><li>and here is some <code>code</code></li></ul>',
         )
 
 

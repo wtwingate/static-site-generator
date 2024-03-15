@@ -44,11 +44,9 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
         if node.text_type != text_type_text:
             new_nodes.append(node)
             continue
-
         split_text = node.text.split(delimiter)
         if len(split_text) % 2 == 0:
             raise Exception(f"Invalid Markdown syntax: unclosed {delimiter}")
-
         for index, text in enumerate(split_text):
             if len(text) == 0:
                 continue
@@ -108,12 +106,12 @@ def split_nodes_link(old_nodes):
 
 
 def block_to_html_heading(block):
-    text_nodes = markdown_to_text_nodes(block)
+    heading = re.match(r"^#+\s", block).group()
+    text_nodes = markdown_to_text_nodes(block.replace(heading, ""))
     html_nodes = []
     for node in text_nodes:
         html_nodes.append(text_node_to_html(node))
-    heading_number = len(re.match(r"^#+"), block)
-    return ParentNode(f"h{heading_number}", html_nodes)
+    return ParentNode(f"h{len(heading) - 1}", html_nodes)
 
 
 def block_to_html_paragraph(block):
@@ -129,7 +127,7 @@ def block_to_html_code(block):
     html_nodes = []
     for node in text_nodes:
         html_nodes.append(text_node_to_html(node))
-    return ParentNode("code", html_nodes)
+    return ParentNode("pre", html_nodes)
 
 
 def block_to_html_quote(block):
@@ -137,11 +135,27 @@ def block_to_html_quote(block):
     html_nodes = []
     for node in text_nodes:
         html_nodes.append(text_node_to_html(node))
-    return ParentNode("quote", html_nodes)
+    return ParentNode("blockquote", html_nodes)
 
 
 def block_to_html_unordered_list(block):
-    pass
+    list_items = []
+    if block.startswith("*"):
+        block = re.sub(r"^\*\s", "", block)
+        list_items = re.split(r"\n\*\s", block)
+    else:
+        block = re.sub(r"^\-\s", "", block)
+        list_items = re.split(r"\n\-\s", block)
+    while "" in list_items:
+        list_items.remove("")
+    html_nodes = []
+    for item in list_items:
+        list_nodes = []
+        text_nodes = markdown_to_text_nodes(item)
+        for node in text_nodes:
+            list_nodes.append(text_node_to_html(node))
+        html_nodes.append(ParentNode("li", list_nodes))
+    return ParentNode("ul", html_nodes)
 
 
 def block_to_html_ordered_list(block):
