@@ -14,7 +14,7 @@ def copy_directory_tree(dir_path, dest_path):
         item_path = os.path.join(dir_path, item)
         copy_path = os.path.join(dest_path, item)
         if os.path.isfile(item_path):
-            print(copy_path)
+            print(f"Copying {item_path} to {copy_path}...")
             shutil.copy(item_path, copy_path)
         else:
             os.mkdir(copy_path)
