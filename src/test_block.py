@@ -88,7 +88,6 @@ class TestBlockToBlockType(unittest.TestCase):
 
     def test_code_valid_multiline(self):
         block = "```for i in range(10):\n    print('hello, world')```"
-        print(block)
         self.assertEqual(block_to_block_type(block), block_type_code)
 
     def test_code_invalid(self):
