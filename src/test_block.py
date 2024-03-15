@@ -249,5 +249,21 @@ where the real programming happens.
         )
 
 
+class TestExtractTitle(unittest.TestCase):
+    def test_extract_title(self):
+        markdown = """
+# Front-end Development is the Worst
+
+Look, front-end development is for script kiddies and soydevs who can't handle the real programming. I mean,
+it's just a bunch of divs and spans, right? And css??? It's like, "Oh, I want this to be red, but not thaaaaat
+red." What a joke.
+
+Real programmers *code*, not silly markup languages. They code on Arch Linux, not Mac OS, and certainly not
+Windows. They use **Vim**, not `VS Code`. They use C, not HTML. Come to the <a href="https://www.boot.dev">backend</a>,
+where the real programming happens.
+"""
+        self.assertEqual(extract_title(markdown), "Front-end Development is the Worst")
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -195,3 +195,11 @@ def block_to_html_ordered_list(block):
             list_nodes.append(text_node_to_html(node))
         html_nodes.append(ParentNode("li", list_nodes))
     return ParentNode("ol", html_nodes)
+
+
+def extract_title(markdown):
+    lines = markdown.splitlines()
+    for line in lines:
+        if line.startswith("# "):
+            return line.lstrip("# ")
+    raise Exception("Page does not contain h1 heading")

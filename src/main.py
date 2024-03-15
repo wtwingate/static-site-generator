@@ -1,17 +1,19 @@
 import os
 import shutil
+from node_markdown import markdown_to_html_node
+from node_markdown import extract_title
 
 
 def main():
     reset_public_dir()
     copy_directory_tree("static", "public")
+    generate_page("./content/index.md", "./template.html", "./public/index.html")
 
 
-def copy_directory_tree(dir_path, dest_path):
-    dir_list = os.listdir(dir_path)
-    print(dir_list)
+def copy_directory_tree(from_path, dest_path):
+    dir_list = os.listdir(from_path)
     for item in dir_list:
-        item_path = os.path.join(dir_path, item)
+        item_path = os.path.join(from_path, item)
         copy_path = os.path.join(dest_path, item)
         if os.path.isfile(item_path):
             print(f"Copying {item_path} to {copy_path}...")
@@ -25,6 +27,21 @@ def reset_public_dir():
     if os.path.exists("./public"):
         shutil.rmtree("./public")
     os.mkdir("./public")
+
+
+def generate_page(from_path, template_path, dest_path):
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+    with open(from_path) as f:
+        markdown = f.read()
+    with open(template_path) as f:
+        template = f.read()
+    html_content = markdown_to_html_node(markdown).to_html()
+    html_title = extract_title(markdown)
+    template.replace("{{ Title }}", html_title)
+    template.replace("{{ Content }}", html_content)
+    os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+    with open(dest_path, "w") as f:
+        f.write(template)
 
 
 main()
