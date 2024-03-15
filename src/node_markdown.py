@@ -148,6 +148,7 @@ def block_to_html_code(block):
     text_nodes = markdown_to_text_nodes(block)
     html_nodes = []
     for node in text_nodes:
+        node.text = node.text.strip()
         html_nodes.append(text_node_to_html(node))
     return ParentNode("pre", html_nodes)
 
