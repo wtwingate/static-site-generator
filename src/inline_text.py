@@ -1,7 +1,6 @@
+import re
 from src.text_node import TextNode
 from src.leaf_node import LeafNode
-from src.convert_text import extract_markdown_links
-from src.convert_text import extract_markdown_images
 from src.constants import *
 
 
@@ -22,6 +21,16 @@ def text_node_to_leaf_node(text_node: TextNode) -> LeafNode:
         raise ValueError("Error: invalid text type")
 
 
+def text_to_text_nodes(text: str) -> list:
+    nodes = [TextNode(text, TEXT_TYPE_TEXT)]
+    nodes = split_nodes_delimiter(nodes, "**", TEXT_TYPE_BOLD)
+    nodes = split_nodes_delimiter(nodes, "*", TEXT_TYPE_ITALIC)
+    nodes = split_nodes_delimiter(nodes, "`", TEXT_TYPE_CODE)
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_link(nodes)
+    return nodes
+
+
 def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: str) -> list:
     new_nodes = []
     for node in old_nodes:
@@ -39,6 +48,16 @@ def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: str) -> li
     return [node for node in new_nodes if node.text != ""]
 
 
+def extract_markdown_links(text: str) -> list:
+    link_regex = re.compile(r"\[(.*?)\]\((.*?)\)")
+    return re.findall(link_regex, text)
+
+
+def extract_markdown_images(text: str) -> list:
+    image_regex = re.compile(r"!\[(.*?)\]\((.*?)\)")
+    return re.findall(image_regex, text)
+
+
 def split_nodes_link(old_nodes: list) -> list:
     new_nodes = []
     for node in old_nodes:
@@ -52,6 +71,7 @@ def split_nodes_link(old_nodes: list) -> list:
             new_nodes.append(TextNode(split_text[0], TEXT_TYPE_TEXT))
             new_nodes.append(TextNode(link_tuple[0], TEXT_TYPE_LINK, link_tuple[1]))
             original_text = split_text[1]
+        new_nodes.append(TextNode(original_text, TEXT_TYPE_TEXT))
     return [node for node in new_nodes if node.text != ""]
 
 
@@ -70,4 +90,5 @@ def split_nodes_image(old_nodes: list) -> list:
             new_nodes.append(TextNode(split_text[0], TEXT_TYPE_TEXT))
             new_nodes.append(TextNode(image_tuple[0], TEXT_TYPE_IMAGE, image_tuple[1]))
             original_text = split_text[1]
+        new_nodes.append(TextNode(original_text, TEXT_TYPE_TEXT))
     return [node for node in new_nodes if node.text != ""]
