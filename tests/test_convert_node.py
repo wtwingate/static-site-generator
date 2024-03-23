@@ -1,5 +1,7 @@
 import unittest
+from src.constants import *
 from src.convert_node import text_node_to_leaf_node
+from src.convert_node import split_nodes_delimiter
 from src.text_node import TextNode
 from src.leaf_node import LeafNode
 
@@ -36,3 +38,61 @@ class TestTextNodeToLeafNode(unittest.TestCase):
             "img", "", {"src": "../images/duck.jpeg", "alt": "image text"}
         )
         self.assertEqual(text_node_to_leaf_node(text_node), leaf_node)
+
+
+class TestSplitNodesDelimiter(unittest.TestCase):
+    def test_split_plain_text(self):
+        old_nodes = [TextNode("normal text", "text")]
+        new_nodes = [TextNode("normal text", "text")]
+        self.assertEqual(
+            split_nodes_delimiter(old_nodes, "**", TEXT_TYPE_BOLD), new_nodes
+        )
+
+    def test_split_bold_text(self):
+        old_nodes = [TextNode("here is some **bold** text", "text")]
+        new_nodes = [
+            TextNode("here is some ", "text"),
+            TextNode("bold", "bold"),
+            TextNode(" text", "text"),
+        ]
+        self.assertEqual(
+            split_nodes_delimiter(old_nodes, "**", TEXT_TYPE_BOLD), new_nodes
+        )
+
+    def test_split_italic_text(self):
+        old_nodes = [TextNode("here is some *italic* text", "text")]
+        new_nodes = [
+            TextNode("here is some ", "text"),
+            TextNode("italic", "italic"),
+            TextNode(" text", "text"),
+        ]
+        self.assertEqual(
+            split_nodes_delimiter(old_nodes, "*", TEXT_TYPE_ITALIC), new_nodes
+        )
+
+    def test_split_code_text(self):
+        old_nodes = [TextNode("here is some `code` text", "text")]
+        new_nodes = [
+            TextNode("here is some ", "text"),
+            TextNode("code", "code"),
+            TextNode(" text", "text"),
+        ]
+        self.assertEqual(
+            split_nodes_delimiter(old_nodes, "`", TEXT_TYPE_CODE), new_nodes
+        )
+
+    def test_split_multiple(self):
+        old_nodes = [TextNode("**Behold!** Here is some **bold text!**", "text")]
+        new_nodes = [
+            TextNode("Behold!", "bold"),
+            TextNode(" Here is some ", "text"),
+            TextNode("bold text!", "bold"),
+        ]
+        self.assertEqual(
+            split_nodes_delimiter(old_nodes, "**", TEXT_TYPE_BOLD), new_nodes
+        )
+
+    def test_split_error(self):
+        old_nodes = [TextNode("invalid **bold text", "text")]
+        with self.assertRaises(Exception):
+            split_nodes_delimiter(old_nodes, "**", TEXT_TYPE_BOLD)
