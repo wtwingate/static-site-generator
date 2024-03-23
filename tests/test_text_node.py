@@ -1,5 +1,5 @@
 import pytest
-from src.textnode import TextNode
+from src.text_node import TextNode
 
 
 class TestTextNode:
