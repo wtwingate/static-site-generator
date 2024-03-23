@@ -1,17 +1,17 @@
-import pytest
+import unittest
 from src.html_node import HTMLNode
 
 
-class TestHTMLNodeToProps:
+class TestHTMLNodeToProps(unittest.TestCase):
     def test_empty_props(self):
         node = HTMLNode("p", "hello, world")
-        assert node.props_to_html() == ""
+        self.assertEqual(node.props_to_html(), "")
 
     def test_single_props(self):
         node = HTMLNode(
             "a", "link", children=None, props={"href": "https://www.mallard.dev"}
         )
-        assert node.props_to_html() == ' href="https://www.mallard.dev"'
+        self.assertEqual(node.props_to_html(), ' href="https://www.mallard.dev"')
 
     def test_multi_props(self):
         node = HTMLNode(
@@ -20,4 +20,4 @@ class TestHTMLNodeToProps:
             children=None,
             props={"class": "important", "id": "very-important"},
         )
-        assert node.props_to_html() == ' class="important" id="very-important"'
+        self.assertEqual(node.props_to_html(), ' class="important" id="very-important"')

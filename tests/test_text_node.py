@@ -1,14 +1,14 @@
-import pytest
+import unittest
 from src.text_node import TextNode
 
 
-class TestTextNodeEqual:
+class TestTextNodeEqual(unittest.TestCase):
     def test_equal(self):
         textnode1 = TextNode("Sample text", "bold", "https://www.mallard.dev")
         textnode2 = TextNode("Sample text", "bold", "https://www.mallard.dev")
-        assert textnode1 == textnode2
+        self.assertEqual(textnode1, textnode2)
 
     def test_unequal(self):
         textnode1 = TextNode("Sample text", "bold", "https://www.mallard.dev")
         textnode2 = TextNode("Different text", "italic", "https://www.example.com")
-        assert textnode1 != textnode2
+        self.assertNotEqual(textnode1, textnode2)
