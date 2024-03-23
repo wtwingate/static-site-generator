@@ -1,7 +1,8 @@
 import unittest
 from src.constants import *
-from src.convert_node import text_node_to_leaf_node
+from src.convert_node import split_nodes_image, text_node_to_leaf_node
 from src.convert_node import split_nodes_delimiter
+from src.convert_node import split_nodes_link
 from src.text_node import TextNode
 from src.leaf_node import LeafNode
 
@@ -96,3 +97,35 @@ class TestSplitNodesDelimiter(unittest.TestCase):
         old_nodes = [TextNode("invalid **bold text", "text")]
         with self.assertRaises(Exception):
             split_nodes_delimiter(old_nodes, "**", TEXT_TYPE_BOLD)
+
+
+class TestSplitNodesLinkImage(unittest.TestCase):
+    def test_split_nodes_link(self):
+        old_nodes = [
+            TextNode(
+                "Follow me on [Twitter](https://twitter.com/wtwingate) and [GitHub](https://github.com/wtwingate)",
+                "text",
+            )
+        ]
+        new_nodes = [
+            TextNode("Follow me on ", "text"),
+            TextNode("Twitter", "link", "https://twitter.com/wtwingate"),
+            TextNode(" and ", "text"),
+            TextNode("GitHub", "link", "https://github.com/wtwingate"),
+        ]
+        self.assertEqual(split_nodes_link(old_nodes), new_nodes)
+
+    def test_split_nodes_image(self):
+        old_nodes = [
+            TextNode(
+                "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
+                "text",
+            )
+        ]
+        new_nodes = [
+            TextNode("This is text with an ", "text"),
+            TextNode("image", "image", "https://i.imgur.com/zjjcJKZ.png"),
+            TextNode(" and another ", "text"),
+            TextNode("second image", "image", "https://i.imgur.com/3elNhQu.png"),
+        ]
+        self.assertEqual(split_nodes_image(old_nodes), new_nodes)
