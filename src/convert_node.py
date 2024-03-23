@@ -1,8 +1,9 @@
+from src.text_node import TextNode
 from src.leaf_node import LeafNode
 from src.constants import *
 
 
-def text_node_to_leaf_node(text_node):
+def text_node_to_leaf_node(text_node: TextNode) -> LeafNode:
     if text_node.text_type == TEXT_TYPE_TEXT:
         return LeafNode(None, text_node.text)
     elif text_node.text_type == TEXT_TYPE_BOLD:
