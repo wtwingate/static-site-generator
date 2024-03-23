@@ -2,7 +2,7 @@ import pytest
 from src.text_node import TextNode
 
 
-class TestTextNode:
+class TestTextNodeEqual:
     def test_equal(self):
         textnode1 = TextNode("Sample text", "bold", "https://www.mallard.dev")
         textnode2 = TextNode("Sample text", "bold", "https://www.mallard.dev")

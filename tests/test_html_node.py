@@ -2,7 +2,7 @@ import pytest
 from src.html_node import HTMLNode
 
 
-class TestHTMLNode:
+class TestHTMLNodeToProps:
     def test_empty_props(self):
         node = HTMLNode("p", "hello, world")
         assert node.props_to_html() == ""
