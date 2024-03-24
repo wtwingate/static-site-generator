@@ -1,42 +1,7 @@
 import unittest
 from src.constants import *
-from src.inline_text import *
+from src.inline_markdown import *
 from src.text_node import TextNode
-from src.leaf_node import LeafNode
-
-
-class TestTextNodeToLeafNode(unittest.TestCase):
-    def test_text_to_leaf(self):
-        text_node = TextNode("normal text", "text")
-        leaf_node = LeafNode(None, "normal text")
-        self.assertEqual(text_node_to_leaf_node(text_node), leaf_node)
-
-    def test_bold_to_leaf(self):
-        text_node = TextNode("bold text", "bold")
-        leaf_node = LeafNode("b", "bold text")
-        self.assertEqual(text_node_to_leaf_node(text_node), leaf_node)
-
-    def test_italic_to_leaf(self):
-        text_node = TextNode("italic text", "italic")
-        leaf_node = LeafNode("i", "italic text")
-        self.assertEqual(text_node_to_leaf_node(text_node), leaf_node)
-
-    def test_code_to_leaf(self):
-        text_node = TextNode("code text", "code")
-        leaf_node = LeafNode("code", "code text")
-        self.assertEqual(text_node_to_leaf_node(text_node), leaf_node)
-
-    def test_link_to_leaf(self):
-        text_node = TextNode("link text", "link", "https://www.mallard.dev")
-        leaf_node = LeafNode("a", "link text", {"href": "https://www.mallard.dev"})
-        self.assertEqual(text_node_to_leaf_node(text_node), leaf_node)
-
-    def test_image_to_leaf(self):
-        text_node = TextNode("image text", "image", "../images/duck.jpeg")
-        leaf_node = LeafNode(
-            "img", "", {"src": "../images/duck.jpeg", "alt": "image text"}
-        )
-        self.assertEqual(text_node_to_leaf_node(text_node), leaf_node)
 
 
 class TestSplitNodesDelimiter(unittest.TestCase):
@@ -151,8 +116,8 @@ class TestSplitNodesLinkImage(unittest.TestCase):
         self.assertEqual(split_nodes_image(old_nodes), new_nodes)
 
 
-class TestTextToTextNodes(unittest.TestCase):
-    def test_text_to_text_nodes(self):
+class TestMarkdownToTextNodes(unittest.TestCase):
+    def test_markdown_to_text_nodes(self):
         text = "This is **text** with an *italic* word and a `code block` and an ![image](https://i.imgur.com/zjjcJKZ.png) and a [link](https://boot.dev)"
         text_nodes = [
             TextNode("This is ", TEXT_TYPE_TEXT),
@@ -166,4 +131,4 @@ class TestTextToTextNodes(unittest.TestCase):
             TextNode(" and a ", TEXT_TYPE_TEXT),
             TextNode("link", TEXT_TYPE_LINK, "https://boot.dev"),
         ]
-        self.assertEqual(text_to_text_nodes(text), text_nodes)
+        self.assertEqual(markdown_to_text_nodes(text), text_nodes)
