@@ -1,5 +1,5 @@
 import unittest
-from src.convert import *
+from convert import *
 
 
 class TestBlockToHTMLParagraph(unittest.TestCase):
@@ -53,7 +53,7 @@ class TestBlockToHTMLCode(unittest.TestCase):
         block = "```\nfor i in range(10):\n    print('hello, world')\n```"
         self.assertEqual(
             block_to_html_code(block).to_html(),
-            "<pre><code>\nfor i in range(10):\n    print('hello, world')\n</code></pre>",
+            "<pre><code>for i in range(10):\n    print('hello, world')\n</code></pre>",
         )
 
 

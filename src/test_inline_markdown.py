@@ -1,7 +1,7 @@
 import unittest
-from src.constants import *
-from src.inline_markdown import *
-from src.text_node import TextNode
+from constants import *
+from inline_markdown import *
+from text_node import TextNode
 
 
 class TestSplitNodesDelimiter(unittest.TestCase):

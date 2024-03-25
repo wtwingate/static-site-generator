@@ -1,6 +1,6 @@
 import unittest
-from src.leaf_node import LeafNode, text_node_to_leaf_node
-from src.text_node import TextNode
+from leaf_node import LeafNode, text_node_to_leaf_node
+from text_node import TextNode
 
 
 class TestLeafNodeToHTML(unittest.TestCase):
