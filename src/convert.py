@@ -63,7 +63,7 @@ def block_to_html_quote(block):
 
 
 def block_to_html_code(block):
-    children = markdown_to_leaf_nodes(block[3:-3])
+    children = markdown_to_leaf_nodes(block[4:-3])
     code = [ParentNode("code", children)]
     return ParentNode("pre", code)
 
