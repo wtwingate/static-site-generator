@@ -1,9 +1,9 @@
 import re
-from src.parent_node import ParentNode
-from src.leaf_node import text_node_to_leaf_node
-from src.block_markdown import *
-from src.inline_markdown import *
-from src.constants import *
+from parent_node import ParentNode
+from leaf_node import text_node_to_leaf_node
+from block_markdown import *
+from inline_markdown import *
+from constants import *
 
 
 def markdown_to_html(markdown):

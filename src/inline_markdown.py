@@ -1,6 +1,6 @@
 import re
-from src.text_node import TextNode
-from src.constants import *
+from text_node import TextNode
+from constants import *
 
 
 def markdown_to_text_nodes(markdown: str) -> list:

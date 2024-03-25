@@ -1,5 +1,5 @@
 import re
-from src.constants import *
+from constants import *
 
 
 def markdown_to_blocks(markdown: str) -> list:

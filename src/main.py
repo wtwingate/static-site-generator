@@ -1,6 +1,6 @@
 import os
 import shutil
-from src.convert import markdown_to_html
+from convert import markdown_to_html
 
 
 def main():

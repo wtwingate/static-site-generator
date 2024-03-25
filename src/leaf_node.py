@@ -1,6 +1,6 @@
-from src.html_node import HTMLNode
-from src.text_node import TextNode
-from src.constants import *
+from html_node import HTMLNode
+from text_node import TextNode
+from constants import *
 
 
 class LeafNode(HTMLNode):
